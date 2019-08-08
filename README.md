@@ -7,7 +7,7 @@ This app is to practice React.js and CSS grid following this free course https:/
 
 ## Changes by me
 * The course is from a year ago and the ChatKit Docs changed, so I had to read it to alter the changes to keep up with the course.
-* In the course, the instructor used React state with the constructor, And I didn't use it so I don't have to bind all the functions
+* In the course, the instructor used React state with the constructor, And I didn't use it so I don't have to bind this to all the functions
 
 ---
 ## Prerequisites

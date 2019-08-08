@@ -3,7 +3,7 @@ import Chatkit from '@pusher/chatkit-client'
 import MessageList from './components/MessageList'
 import SendMessageForm from './components/SendMessageForm'
 import RoomList from './components/RoomList'
-// import NewRoomForm from './components/NewRoomForm'
+import NewRoomForm from './components/NewRoomForm'
 import { tokenUrl, instanceLocator } from './config'
 class App extends Component {
   state = {
@@ -57,12 +57,13 @@ class App extends Component {
       roomId: roomId
     })
     this.currentUser.subscribeToRoom({
-      roomId: roomId,
-      // roomId,
+      // roomId: roomId,
+      roomId,
 
       hooks: {
         onMessage: message => {
           // console.log('Received message: ', message.text);
+          // error on this setState(...) of undefined
           this.setState({
             messages: [...this.state.messages, message]
           })
@@ -92,6 +93,17 @@ class App extends Component {
     })
 
   }
+
+  createRoom = (roomName) => {
+    // console.log(`Room name: ${roomName}`)
+    this.currentUser.createRoom({
+      name: roomName
+    })
+      .then(room => this.subscribeToRoom(room.id))
+      .catch(error => {
+        console.error("Error with create room: ", error);
+      })
+  }
   render() {
     // console.log('this.state.messages:', this.state.messages);
     return (
@@ -100,9 +112,13 @@ class App extends Component {
           subscribeToRoom={this.subscribeToRoom}
           rooms={[...this.state.joinableRooms, ...this.state.joinedRooms]}
         />
-        <MessageList messages={this.state.messages} />
-        <SendMessageForm sendMessage={this.sendMessage} />
-        {/* <NewRoomForm /> */}
+        <MessageList
+          roomId={this.state.roomId}
+          messages={this.state.messages} />
+        <SendMessageForm
+          disabled={!this.state.roomId}
+          sendMessage={this.sendMessage} />
+        <NewRoomForm createRoom={this.createRoom} />
       </div>
     );
   }
